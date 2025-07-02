@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import eazyLoanLogo from '@/assets/eazy-loan-logo.jpg';
 
 // Animation variants
 const containerVariants = {
@@ -287,14 +288,22 @@ const Auth = () => {
           variants={itemVariants}
         >
           <Card className="shadow-card bg-gradient-card border-0">
-            <CardHeader className="text-center">
-              <motion.div variants={itemVariants}>
-                <CardTitle className="text-2xl font-bold text-primary">
-                  Forgot Password
-                </CardTitle>
-                <CardDescription>
-                  Enter your email address and we'll send you a link to reset your password
-                </CardDescription>
+            <CardHeader className="text-center space-y-4">
+              <motion.div variants={itemVariants} className="flex flex-col items-center space-y-4">
+                <motion.img 
+                  src={eazyLoanLogo} 
+                  alt="Eazy Loan" 
+                  className="w-16 h-16 rounded-lg shadow-soft"
+                  variants={itemVariants}
+                />
+                <div className="space-y-2">
+                  <CardTitle className="text-2xl font-bold text-primary">
+                    Forgot Password
+                  </CardTitle>
+                  <CardDescription>
+                    Enter your email address and we'll send you a link to reset your password
+                  </CardDescription>
+                </div>
               </motion.div>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -427,14 +436,27 @@ const Auth = () => {
         >
           <motion.div className="w-full max-w-md" variants={itemVariants}>
             <Card className="shadow-card bg-gradient-card border-0">
-              <CardHeader className="text-center">
-                <motion.div variants={itemVariants}>
-                  <CardTitle className="text-2xl font-bold text-primary">
-                    Welcome to Eazy Kenya Loans
-                  </CardTitle>
-                  <CardDescription>
-                    Sign in to your account or create a new one
-                  </CardDescription>
+              <CardHeader className="text-center space-y-4">
+                <motion.div variants={itemVariants} className="flex flex-col items-center space-y-4">
+                  <motion.img 
+                    src={eazyLoanLogo} 
+                    alt="Eazy Loan" 
+                    className="w-20 h-20 rounded-xl shadow-soft"
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                  <div className="space-y-2">
+                    <CardTitle className="text-3xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+                      Eazy Loan
+                    </CardTitle>
+                    <CardDescription className="text-lg">
+                      Quick & Easy Loans for Kenya
+                    </CardDescription>
+                    <CardDescription className="text-sm text-muted-foreground">
+                      Sign in to your account or create a new one
+                    </CardDescription>
+                  </div>
                 </motion.div>
               </CardHeader>
               <CardContent>
