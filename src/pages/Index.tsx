@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
@@ -41,6 +42,7 @@ const stepCardVariants: Variants = {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const howItWorksRef = useRef(null);
   const isHowItWorksInView = useInView(howItWorksRef, { once: true, margin: "-100px" });
 
@@ -164,7 +166,7 @@ const Index = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/auth'}
+                onClick={() => navigate('/auth', { state: { defaultTab: 'signup' } })}
                 className="bg-gradient-hero text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-glow hover:shadow-premium transition-all duration-300"
               >
                 Start Your Application Now

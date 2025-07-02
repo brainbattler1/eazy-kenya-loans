@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -100,6 +100,7 @@ const forgotPasswordSchema = z.object({
 const Auth = () => {
   const { user, signUp, signIn, verifyOtp, resendOtp, resetPassword } = useAuth();
   const { toast } = useToast();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [otpStep, setOtpStep] = useState(false);
@@ -107,6 +108,14 @@ const Auth = () => {
   const [pendingEmail, setPendingEmail] = useState('');
   const [otpValue, setOtpValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('signin');
+
+  // Check for navigation state to auto-switch to signup tab
+  useEffect(() => {
+    if (location.state?.defaultTab === 'signup') {
+      setActiveTab('signup');
+    }
+  }, [location.state]);
 
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -460,7 +469,7 @@ const Auth = () => {
                 </motion.div>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="signin" className="space-y-4">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="signin">Sign In</TabsTrigger>
                     <TabsTrigger value="signup">Sign Up</TabsTrigger>

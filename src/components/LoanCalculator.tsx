@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +9,7 @@ import { Slider } from '@/components/ui/slider';
 import { Calculator, TrendingUp, Clock, DollarSign } from 'lucide-react';
 
 const LoanCalculator = () => {
+  const navigate = useNavigate();
   const [amount, setAmount] = useState([50000]);
   const [tenure, setTenure] = useState([30]);
   const [interestRate] = useState(12.5); // Fixed rate for demo
@@ -161,7 +163,7 @@ const LoanCalculator = () => {
           >
             <Button 
               className="w-full bg-gradient-hero hover:shadow-glow transition-all duration-300 text-lg py-6"
-              onClick={() => window.location.href = '/auth'}
+              onClick={() => navigate('/auth', { state: { defaultTab: 'signup' } })}
             >
               Apply for This Loan
             </Button>
