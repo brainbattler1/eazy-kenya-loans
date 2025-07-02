@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import heroBanner from '@/assets/hero-banner.jpg';
 import { motion, Variants } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const fadeIn: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -32,6 +33,7 @@ const scaleIn: Variants = {
 };
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <motion.section
       initial="hidden"
@@ -125,6 +127,7 @@ const Hero = () => {
             >
               <Button 
                 size="lg" 
+                onClick={() => navigate('/auth', { state: { defaultTab: 'signup' } })}
                 className="bg-gradient-hero hover:shadow-glow transition-all duration-300 text-lg px-8 py-6 h-auto"
               >
                 Apply for Loan Now
@@ -137,6 +140,7 @@ const Hero = () => {
               <Button 
                 variant="outline" 
                 size="lg"
+                onClick={() => navigate('/calculator')}
                 className="text-lg px-8 py-6 h-auto border-primary/20 hover:bg-primary/5"
               >
                 Calculate Repayment
