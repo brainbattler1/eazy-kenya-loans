@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: accessData, error: accessError } = await supabase
         .from('system_access')
         .select('*')
-        .single();
+        .maybeSingle();
 
       if (accessError) {
         console.error('Error checking system access:', accessError);
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .from('system_maintenance')
         .select('*')
         .eq('id', '00000000-0000-0000-0000-000000000000')
-        .single();
+        .maybeSingle();
 
       if (maintenanceError) {
         console.error('Error checking maintenance status:', maintenanceError);
@@ -116,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .select('role')
         .eq('user_id', user.id)
         .in('role', ['superadmin', 'admin'])
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error checking admin status:', error);
