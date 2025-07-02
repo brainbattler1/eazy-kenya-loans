@@ -68,7 +68,10 @@ export function SystemManager({ currentUserId }: SystemManagerProps) {
       if (accessError) throw accessError;
 
       if (accessData) {
-        setSystemAccess(accessData);
+        setSystemAccess({
+          access_status: accessData.access_status as 'granted' | 'maintenance',
+          maintenance_message: accessData.maintenance_message
+        });
       }
 
       // Then get maintenance details

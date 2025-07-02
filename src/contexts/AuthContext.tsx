@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (accessData) {
-        setSystemAccess(accessData.access_status);
+        setSystemAccess(accessData.access_status as 'granted' | 'maintenance');
         setMaintenanceMessage(accessData.maintenance_message || '');
       }
 

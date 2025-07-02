@@ -52,7 +52,7 @@ const MaintenanceMode = () => {
 };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, systemAccess, isAdmin } = useAuth();
+  const { user, loading, systemAccess, isAdmin, maintenanceMode } = useAuth();
 
   if (loading) {
     return (
@@ -68,7 +68,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  if (systemAccess === 'maintenance' && !isAdmin) {
+  // Check both systemAccess and maintenanceMode for maintenance status
+  if ((systemAccess === 'maintenance' || maintenanceMode) && !isAdmin) {
     return <MaintenanceMode />;
   }
 
