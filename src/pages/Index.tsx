@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import PageTransition from '@/components/PageTransition';
+import LoanCalculator from '@/components/LoanCalculator';
 
 const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -49,6 +50,31 @@ const Index = () => {
         <Header />
         <Hero />
         
+        {/* Loan Calculator Section */}
+        <section className="py-20 bg-gradient-subtle">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div 
+              variants={fadeUpVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
+                Calculate Your Loan
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Use our smart calculator to see exactly what your loan payments will be. 
+                Get instant estimates with no hidden fees.
+              </p>
+            </motion.div>
+            
+            <div className="max-w-4xl mx-auto">
+              <LoanCalculator />
+            </div>
+          </div>
+        </section>
+
         {/* How it Works Section */}
         <section 
           ref={howItWorksRef}
@@ -65,8 +91,8 @@ const Index = () => {
               <h2 className="text-3xl sm:text-4xl font-bold text-primary mb-4">
                 How Eazy Loan Works
               </h2>
-              <p className="text-lg text-muted-foreground">
-                Get started with our simple platform
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Get your loan in 3 simple steps. Our streamlined process makes borrowing quick and easy.
               </p>
             </motion.div>
 
@@ -74,23 +100,26 @@ const Index = () => {
               variants={staggerContainerVariants}
               initial="hidden"
               animate={isHowItWorksInView ? "visible" : "hidden"}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
             >
               {[
                 {
                   step: 1,
-                  title: "Sign Up",
-                  description: "Create your account with our simple registration process. Takes less than 2 minutes."
+                  title: "Apply Online",
+                  description: "Fill out our simple application form. It takes just 5 minutes to complete and submit your loan request.",
+                  icon: "📝"
                 },
                 {
                   step: 2,
-                  title: "Complete Profile",
-                  description: "Add your personal information and verify your email address to get started."
+                  title: "Get Approved",
+                  description: "Our AI-powered system reviews your application instantly. Get approval decisions in minutes, not days.",
+                  icon: "✅"
                 },
                 {
                   step: 3,
-                  title: "Access Dashboard",
-                  description: "Use your personalized dashboard to manage your account and access our services."
+                  title: "Receive Funds",
+                  description: "Once approved, funds are transferred directly to your M-Pesa or bank account within hours.",
+                  icon: "💰"
                 }
               ].map((item) => (
                 <motion.div
@@ -98,21 +127,51 @@ const Index = () => {
                   variants={stepCardVariants}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="text-center space-y-4"
+                  className="relative"
                 >
-                  <motion.div 
-                    className="w-16 h-16 mx-auto bg-gradient-hero rounded-2xl flex items-center justify-center text-white text-2xl font-bold"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                  >
-                    {item.step}
-                  </motion.div>
-                  <h3 className="text-xl font-semibold">{item.title}</h3>
-                  <p className="text-muted-foreground">
-                    {item.description}
-                  </p>
+                  <div className="bg-gradient-card rounded-2xl p-8 shadow-card border border-border/50 text-center space-y-4 h-full">
+                    <motion.div 
+                      className="w-20 h-20 mx-auto bg-gradient-hero rounded-2xl flex items-center justify-center text-white text-2xl font-bold relative"
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.8, ease: "easeInOut" }}
+                    >
+                      {item.step}
+                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-lg">
+                        {item.icon}
+                      </div>
+                    </motion.div>
+                    <h3 className="text-xl font-semibold text-primary">{item.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                  
+                  {/* Connection line for desktop */}
+                  {item.step < 3 && (
+                    <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-primary to-transparent transform -translate-y-1/2 z-10" />
+                  )}
                 </motion.div>
               ))}
+            </motion.div>
+
+            {/* Call to Action */}
+            <motion.div 
+              variants={fadeUpVariants}
+              initial="hidden"
+              animate={isHowItWorksInView ? "visible" : "hidden"}
+              className="text-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.location.href = '/auth'}
+                className="bg-gradient-hero text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-glow hover:shadow-premium transition-all duration-300"
+              >
+                Start Your Application Now
+              </motion.button>
+              <p className="text-sm text-muted-foreground mt-4">
+                No paperwork required • Instant approval • Secure process
+              </p>
             </motion.div>
           </div>
         </section>
