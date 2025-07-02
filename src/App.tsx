@@ -19,6 +19,9 @@ import Support from "./pages/Support";
 import Referrals from "./pages/Referrals";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import Calculator from "./pages/Calculator";
+import HowItWorks from "./pages/HowItWorks";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -83,6 +86,9 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
+        <Route path="/calculator" element={<Calculator />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/apply" element={<Navigate to="/loan-application" replace />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />

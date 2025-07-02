@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LogOut, User } from 'lucide-react';
 import NotificationCenter from '@/components/NotificationCenter';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
@@ -34,6 +34,7 @@ const logoVariants: Variants = {
 const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSignOut = async () => {
     try {
@@ -57,19 +58,21 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <motion.div 
-            className="flex items-center space-x-2"
-            variants={logoVariants}
-            initial="hidden"
-            animate="visible"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="h-8 w-8 rounded-lg bg-gradient-hero flex items-center justify-center">
-              <span className="text-white font-bold text-lg">E</span>
-            </div>
-            <span className="text-xl font-bold text-primary">Eazy Loan</span>
-          </motion.div>
+          <Link to="/">
+            <motion.div 
+              className="flex items-center space-x-2"
+              variants={logoVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="h-8 w-8 rounded-lg bg-gradient-hero flex items-center justify-center">
+                <span className="text-white font-bold text-lg">E</span>
+              </div>
+              <span className="text-xl font-bold text-primary">Eazy Loan</span>
+            </motion.div>
+          </Link>
 
           {/* Navigation */}
           <motion.nav 
@@ -85,20 +88,26 @@ const Header = () => {
             }}
           >
             {[
-              { href: "#calculator", text: "Calculator" },
-              { href: "#how-it-works", text: "How it Works" },
-              { href: "#contact", text: "Contact" }
+              { to: "/calculator", text: "Calculator" },
+              { to: "/how-it-works", text: "How it Works" },
+              { to: "/contact", text: "Contact" }
             ].map((item) => (
-              <motion.a
-                key={item.href}
-                href={item.href}
-                variants={navItemVariants}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                {item.text}
-              </motion.a>
+              <motion.div key={item.to} variants={navItemVariants}>
+                <Link
+                  to={item.to}
+                  className={`text-muted-foreground hover:text-primary transition-colors ${
+                    location.pathname === item.to ? 'text-primary font-semibold' : ''
+                  }`}
+                >
+                  <motion.span
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="block"
+                  >
+                    {item.text}
+                  </motion.span>
+                </Link>
+              </motion.div>
             ))}
           </motion.nav>
 
