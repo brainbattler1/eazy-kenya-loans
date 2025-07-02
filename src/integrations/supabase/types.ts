@@ -45,51 +45,6 @@ export type Database = {
         }
         Relationships: []
       }
-      system_maintenance: {
-        Row: {
-          id: string
-          is_enabled: boolean
-          message: string | null
-          enabled_by: string | null
-          enabled_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          is_enabled?: boolean
-          message?: string | null
-          enabled_by?: string | null
-          enabled_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          is_enabled?: boolean
-          message?: string | null
-          enabled_by?: string | null
-          enabled_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      system_access: {
-        Row: {
-          access_status: 'granted' | 'maintenance'
-          maintenance_message: string | null
-        }
-        Insert: {
-          access_status?: 'granted' | 'maintenance'
-          maintenance_message?: string | null
-        }
-        Update: {
-          access_status?: 'granted' | 'maintenance'
-          maintenance_message?: string | null
-        }
-        Relationships: []
-      }
       loan_applications: {
         Row: {
           amount: number
@@ -249,36 +204,6 @@ export type Database = {
         }
         Relationships: []
       }
-      maintenance_mode: {
-        Row: {
-          created_at: string | null
-          enabled_at: string | null
-          enabled_by: string | null
-          id: string
-          is_enabled: boolean
-          message: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          enabled_at?: string | null
-          enabled_by?: string | null
-          id?: string
-          is_enabled?: boolean
-          message?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          enabled_at?: string | null
-          enabled_by?: string | null
-          id?: string
-          is_enabled?: boolean
-          message?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       notifications: {
         Row: {
           action_url: string | null
@@ -387,6 +312,36 @@ export type Database = {
           reward_amount?: number | null
           reward_paid?: boolean | null
           status?: string
+        }
+        Relationships: []
+      }
+      system_maintenance: {
+        Row: {
+          created_at: string | null
+          enabled_at: string | null
+          enabled_by: string | null
+          id: string
+          is_enabled: boolean | null
+          message: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          message?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          message?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -502,7 +457,13 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      system_access: {
+        Row: {
+          access_status: string | null
+          maintenance_message: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       assign_admin_role: {
@@ -511,6 +472,10 @@ export type Database = {
       }
       can_user_access_system: {
         Args: { _user_id?: string }
+        Returns: boolean
+      }
+      check_maintenance_access: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       generate_referral_code: {
