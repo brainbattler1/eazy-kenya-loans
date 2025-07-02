@@ -45,6 +45,51 @@ export type Database = {
         }
         Relationships: []
       }
+      system_maintenance: {
+        Row: {
+          id: string
+          is_enabled: boolean
+          message: string | null
+          enabled_by: string | null
+          enabled_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          is_enabled?: boolean
+          message?: string | null
+          enabled_by?: string | null
+          enabled_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          is_enabled?: boolean
+          message?: string | null
+          enabled_by?: string | null
+          enabled_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      system_access: {
+        Row: {
+          access_status: 'granted' | 'maintenance'
+          maintenance_message: string | null
+        }
+        Insert: {
+          access_status?: 'granted' | 'maintenance'
+          maintenance_message?: string | null
+        }
+        Update: {
+          access_status?: 'granted' | 'maintenance'
+          maintenance_message?: string | null
+        }
+        Relationships: []
+      }
       loan_applications: {
         Row: {
           amount: number

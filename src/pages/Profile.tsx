@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
-import { ArrowLeft, Save, Lock, Upload, Camera } from 'lucide-react';
+import { ArrowLeft, Save, Lock, Upload, Camera, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface ProfileData {
@@ -85,7 +85,7 @@ const buttonVariants = {
 };
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, maintenanceMode, maintenanceMessage } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileData>({
     full_name: '',
@@ -138,9 +138,13 @@ const Profile = () => {
       if (error) throw error;
 
       toast.success('Profile updated successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating profile:', error);
-      toast.error('Failed to update profile');
+      if (error.code === 'P0001' && error.message?.includes('maintenance')) {
+        toast.error('System is under maintenance. Profile updates are temporarily disabled.');
+      } else {
+        toast.error('Failed to update profile. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
@@ -184,9 +188,11 @@ const Profile = () => {
       if (profile.avatar_url) {
         const oldPath = profile.avatar_url.split('/').pop();
         if (oldPath) {
-          await supabase.storage
+          const { error: removeError } = await supabase.storage
             .from('avatars')
             .remove([`${user.id}/${oldPath}`]);
+          
+          if (removeError) throw removeError;
         }
       }
 
@@ -216,9 +222,27 @@ const Profile = () => {
 
       setProfile(prev => ({ ...prev, avatar_url: publicUrl }));
       toast.success('Profile picture updated successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading avatar:', error);
-      toast.error('Failed to upload profile picture');
+      if (error.code === 'P0001' && error.message?.includes('maintenance')) {
+        toast.error('System is under maintenance. Profile updates are temporarily disabled.');
+      } else {
+        toast.error('Failed to upload profile picture. Please try again later.');
+      }
+      
+      // Clean up uploaded file if profile update failed
+      if (error.code === 'P0001') {
+        try {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `avatar_${Date.now()}.${fileExt}`;
+          const filePath = `${user.id}/${fileName}`;
+          await supabase.storage
+            .from('avatars')
+            .remove([filePath]);
+        } catch (cleanupError) {
+          console.error('Error cleaning up uploaded file:', cleanupError);
+        }
+      }
     } finally {
       setUploadingAvatar(false);
     }
@@ -241,6 +265,28 @@ const Profile = () => {
       variants={pageVariants}
     >
       <div className="container mx-auto px-4 py-8">
+        {maintenanceMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <Card className="border-warning bg-warning/10">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 text-warning">
+                  <AlertTriangle className="h-5 w-5" />
+                  <div>
+                    <h3 className="font-medium">System Under Maintenance</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {maintenanceMessage || 'Profile updates are temporarily disabled. Please try again later.'}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         <motion.div 
           className="flex items-center gap-4 mb-8"
           variants={headerVariants}

@@ -4,6 +4,7 @@ DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
 DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
 DROP POLICY IF EXISTS "Superadmins can view all profiles" ON public.profiles;
 DROP POLICY IF EXISTS "Admins can update all profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Admins can view all profiles" ON public.profiles;
 
 -- Create comprehensive RLS policies
 CREATE POLICY "Users can view their own profile"
@@ -12,7 +13,11 @@ CREATE POLICY "Users can view their own profile"
 
 CREATE POLICY "Users can update their own profile"
   ON public.profiles FOR UPDATE
-  USING (auth.uid() = user_id);
+  USING (
+    auth.uid() = user_id 
+    AND NOT public.is_user_banned(auth.uid())
+    AND (NOT public.is_maintenance_mode_enabled() OR public.is_admin(auth.uid()))
+  );
 
 CREATE POLICY "Users can insert their own profile"
   ON public.profiles FOR INSERT

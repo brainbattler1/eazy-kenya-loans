@@ -351,67 +351,71 @@ const Auth = () => {
     <AnimatePresence mode="wait">
       {otpStep ? (
         <motion.div
-          className="min-h-screen flex items-center justify-center bg-gradient-subtle px-4"
+          variants={containerVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
-          variants={containerVariants}
+          className="space-y-4"
         >
-          <motion.div className="w-full max-w-md" variants={itemVariants}>
-            <Card className="shadow-card bg-gradient-card border-0">
-              <CardHeader className="text-center">
-                <motion.div variants={itemVariants}>
-                  <CardTitle className="text-2xl font-bold text-primary">
-                    Verify Your Email
-                  </CardTitle>
-                  <CardDescription>
-                    Enter the 6-digit code we sent to {pendingEmail}
-                  </CardDescription>
-                </motion.div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <motion.div variants={formFieldVariants}>
-                  <InputOTP
-                    value={otpValue}
-                    onChange={setOtpValue}
-                    maxLength={6}
-                    render={({ slots }) => (
-                      <InputOTPGroup className="gap-2">
-                        {slots.map((slot, index) => (
-                          <InputOTPSlot key={index} index={index} {...slot} />
-                        ))}
-                      </InputOTPGroup>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                >
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setOtpStep(false)}
+              className="mb-2"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Verify your email</CardTitle>
+              <CardDescription>
+                Enter the verification code sent to {pendingEmail}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <InputOTP
+                value={otpValue}
+                onChange={setOtpValue}
+                maxLength={6}
+                render={({ slots }) => (
+                  <InputOTPGroup>
+                    {slots.map((slot, index) => (
+                      <InputOTPSlot
+                        key={index}
+                        char={slot.char}
+                        hasFakeCaret={slot.hasFakeCaret}
+                        isActive={slot.isActive}
+                      />
+                    ))}
+                  </InputOTPGroup>
+                )}
+              />
+              <div className="flex flex-col gap-2">
+                <motion.div variants={buttonVariants}>
                   <Button
+                    className="w-full"
                     onClick={handleVerifyOtp}
                     disabled={loading || otpValue.length !== 6}
-                    className="w-full bg-gradient-hero hover:shadow-glow transition-all duration-300"
                   >
-                    Verify Email
+                    {loading ? 'Verifying...' : 'Verify Email'}
                   </Button>
                 </motion.div>
-
-                <motion.div variants={itemVariants}>
+                <motion.div variants={buttonVariants}>
                   <Button
                     variant="ghost"
+                    className="w-full"
                     onClick={handleResendOtp}
                     disabled={loading}
-                    className="mx-auto block text-muted-foreground hover:text-primary"
                   >
-                    Resend Code
+                    {loading ? 'Sending...' : 'Resend Code'}
                   </Button>
                 </motion.div>
-              </CardContent>
-            </Card>
-          </motion.div>
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
       ) : (
         <motion.div

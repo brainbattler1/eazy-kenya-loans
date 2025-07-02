@@ -7,14 +7,21 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Settings, AlertTriangle, Users, Power } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface MaintenanceMode {
   id: string;
   is_enabled: boolean;
-  message: string;
-  enabled_by?: string;
-  enabled_at?: string;
-  updated_at?: string;
+  message: string | null;
+  enabled_by: string | null;
+  enabled_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface SystemAccess {
+  access_status: 'granted' | 'maintenance';
+  maintenance_message: string | null;
 }
 
 interface SystemManagerProps {
@@ -23,33 +30,65 @@ interface SystemManagerProps {
 
 export function SystemManager({ currentUserId }: SystemManagerProps) {
   const [maintenance, setMaintenance] = useState<MaintenanceMode | null>(null);
+  const [systemAccess, setSystemAccess] = useState<SystemAccess | null>(null);
   const [maintenanceMessage, setMaintenanceMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const { toast } = useToast();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     fetchMaintenanceStatus();
+
+    // Set up realtime subscription for maintenance mode updates
+    const channel = supabase
+      .channel('maintenance-updates')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'system_maintenance'
+      }, () => {
+        fetchMaintenanceStatus();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchMaintenanceStatus = async () => {
     try {
-      const { data, error } = await supabase
-        .from('maintenance_mode')
+      // First check system access status
+      const { data: accessData, error: accessError } = await supabase
+        .from('system_access')
         .select('*')
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (accessError) throw accessError;
 
-      if (data) {
-        setMaintenance(data);
-        setMaintenanceMessage(data.message);
+      if (accessData) {
+        setSystemAccess(accessData);
+      }
+
+      // Then get maintenance details
+      const { data: maintenanceData, error: maintenanceError } = await supabase
+        .from('system_maintenance')
+        .select('*')
+        .eq('id', '00000000-0000-0000-0000-000000000000')
+        .single();
+
+      if (maintenanceError) throw maintenanceError;
+
+      if (maintenanceData) {
+        setMaintenance(maintenanceData);
+        setMaintenanceMessage(maintenanceData.message || '');
       }
     } catch (error) {
       console.error('Error fetching maintenance status:', error);
       toast({
         title: 'Error',
-        description: 'Failed to fetch maintenance status',
+        description: 'Failed to fetch maintenance status. Please refresh the page.',
         variant: 'destructive'
       });
     } finally {
@@ -58,81 +97,36 @@ export function SystemManager({ currentUserId }: SystemManagerProps) {
   };
 
   const toggleMaintenanceMode = async (enable: boolean) => {
+    if (!isAdmin) {
+      toast({
+        title: 'Error',
+        description: 'You do not have permission to toggle maintenance mode.',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     setActionLoading(true);
     try {
-      // First check if maintenance_mode record exists
-      const { data: existing } = await supabase
-        .from('maintenance_mode')
-        .select('*')
-        .single();
+      const { data, error } = await supabase
+        .rpc('toggle_maintenance_mode', {
+          enable_maintenance: enable,
+          maintenance_message: maintenanceMessage || 'System is currently under maintenance. Please try again later.'
+        });
 
-      if (existing) {
-        // Update existing record
-        const { error } = await supabase
-          .from('maintenance_mode')
-          .update({
-            is_enabled: enable,
-            message: maintenanceMessage,
-            enabled_by: enable ? currentUserId : null,
-            enabled_at: enable ? new Date().toISOString() : null,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', existing.id);
-
-        if (error) throw error;
-      } else {
-        // Create new record
-        const { error } = await supabase
-          .from('maintenance_mode')
-          .insert({
-            is_enabled: enable,
-            message: maintenanceMessage,
-            enabled_by: enable ? currentUserId : null,
-            enabled_at: enable ? new Date().toISOString() : null,
-            updated_at: new Date().toISOString()
-          });
-
-        if (error) throw error;
-      }
-
-      // Send notifications to all users
-      if (enable) {
-        const { data: profiles } = await supabase.from('profiles').select('user_id');
-        if (profiles) {
-          for (const profile of profiles) {
-            await supabase.from('notifications').insert({
-              user_id: profile.user_id,
-              title: 'Maintenance Mode Enabled',
-              message: maintenanceMessage,
-              type: 'warning'
-            });
-          }
-        }
-      } else {
-        const { data: profiles } = await supabase.from('profiles').select('user_id');
-        if (profiles) {
-          for (const profile of profiles) {
-            await supabase.from('notifications').insert({
-              user_id: profile.user_id,
-              title: 'Maintenance Complete',
-              message: 'The system is now back online. Thank you for your patience.',
-              type: 'success'
-            });
-          }
-        }
-      }
+      if (error) throw error;
 
       toast({
         title: 'Success',
         description: `Maintenance mode ${enable ? 'enabled' : 'disabled'} successfully`
       });
 
-      fetchMaintenanceStatus();
-    } catch (error) {
+      // No need to call fetchMaintenanceStatus here as the realtime subscription will handle it
+    } catch (error: any) {
       console.error('Error toggling maintenance mode:', error);
       toast({
         title: 'Error',
-        description: 'Failed to toggle maintenance mode',
+        description: error.message || 'Failed to toggle maintenance mode. Please try again.',
         variant: 'destructive'
       });
     } finally {
@@ -268,9 +262,9 @@ export function SystemManager({ currentUserId }: SystemManagerProps) {
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 border border-border/50 rounded-lg">
-              <h3 className="font-medium mb-1">System Status</h3>
-              <p className={`text-sm ${maintenance?.is_enabled ? 'text-orange-600' : 'text-green-600'}`}>
-                {maintenance?.is_enabled ? 'Under Maintenance' : 'Operational'}
+              <h3 className="font-medium mb-1">System Access</h3>
+              <p className={`text-sm ${systemAccess?.access_status === 'maintenance' ? 'text-orange-600' : 'text-green-600'}`}>
+                {systemAccess?.access_status === 'maintenance' ? 'Under Maintenance' : 'Operational'}
               </p>
             </div>
             <div className="p-4 border border-border/50 rounded-lg">

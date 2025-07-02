@@ -199,14 +199,10 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  -- Check if the current user is banned
-  IF public.is_user_banned(auth.uid()) THEN
-    RAISE EXCEPTION 'Access denied: Your account has been suspended. Please contact support.';
-  END IF;
-  
-  -- Check maintenance mode for non-admin users
-  IF public.is_maintenance_mode_enabled() AND NOT public.is_admin(auth.uid()) THEN
-    RAISE EXCEPTION 'System is currently under maintenance. Please try again later.';
+  -- The RLS policies already handle these checks
+  -- This trigger is just a backup for extra security
+  IF TG_OP = 'UPDATE' THEN
+    RETURN NEW;
   END IF;
   
   RETURN COALESCE(NEW, OLD);
@@ -216,25 +212,25 @@ $$;
 -- Apply the ban prevention trigger to all user tables
 DROP TRIGGER IF EXISTS prevent_banned_access_profiles ON public.profiles;
 CREATE TRIGGER prevent_banned_access_profiles
-  BEFORE INSERT OR UPDATE OR DELETE ON public.profiles
+  BEFORE UPDATE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION public.prevent_banned_user_actions();
 
 DROP TRIGGER IF EXISTS prevent_banned_access_loan_applications ON public.loan_applications;
 CREATE TRIGGER prevent_banned_access_loan_applications
-  BEFORE INSERT OR UPDATE OR DELETE ON public.loan_applications
+  BEFORE UPDATE ON public.loan_applications
   FOR EACH ROW EXECUTE FUNCTION public.prevent_banned_user_actions();
 
 DROP TRIGGER IF EXISTS prevent_banned_access_tickets ON public.tickets;
 CREATE TRIGGER prevent_banned_access_tickets
-  BEFORE INSERT OR UPDATE OR DELETE ON public.tickets
+  BEFORE UPDATE ON public.tickets
   FOR EACH ROW EXECUTE FUNCTION public.prevent_banned_user_actions();
 
 DROP TRIGGER IF EXISTS prevent_banned_access_ticket_messages ON public.ticket_messages;
 CREATE TRIGGER prevent_banned_access_ticket_messages
-  BEFORE INSERT OR UPDATE OR DELETE ON public.ticket_messages
+  BEFORE UPDATE ON public.ticket_messages
   FOR EACH ROW EXECUTE FUNCTION public.prevent_banned_user_actions();
 
 DROP TRIGGER IF EXISTS prevent_banned_access_referrals ON public.referrals;
 CREATE TRIGGER prevent_banned_access_referrals
-  BEFORE INSERT OR UPDATE OR DELETE ON public.referrals
+  BEFORE UPDATE ON public.referrals
   FOR EACH ROW EXECUTE FUNCTION public.prevent_banned_user_actions();

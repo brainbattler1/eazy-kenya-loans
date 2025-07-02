@@ -7,13 +7,23 @@ LANGUAGE plpgsql
 SECURITY DEFINER 
 SET search_path = ''
 AS $$
+DECLARE
+  _full_name text;
 BEGIN
+  -- Extract full_name from metadata
+  _full_name := NULLIF(TRIM(COALESCE(NEW.raw_user_meta_data->>'full_name', '')), '');
+  
+  -- Insert profile with full name
   INSERT INTO public.profiles (user_id, full_name, email_verified)
   VALUES (
     NEW.id,
-    COALESCE(NEW.raw_user_meta_data ->> 'full_name', ''),
+    COALESCE(_full_name, 'Guest'),
     COALESCE(NEW.email_confirmed_at IS NOT NULL, false)
   );
+  
+  -- Assign default user role
+  INSERT INTO public.user_roles (user_id, role)
+  VALUES (NEW.id, 'user');
   
   RETURN NEW;
 END;

@@ -28,13 +28,16 @@ const InputOTPGroup = React.forwardRef<
 ))
 InputOTPGroup.displayName = "InputOTPGroup"
 
+type InputOTPSlotProps = React.ComponentPropsWithoutRef<"div"> & {
+  char?: string;
+  hasFakeCaret?: boolean;
+  isActive?: boolean;
+}
+
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
-  React.ComponentPropsWithoutRef<"div"> & { index: number }
->(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
-
+  InputOTPSlotProps
+>(({ className, char, hasFakeCaret, isActive, ...props }, ref) => {
   return (
     <div
       ref={ref}

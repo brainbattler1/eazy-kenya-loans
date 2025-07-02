@@ -134,7 +134,7 @@ const Dashboard = () => {
                 </SidebarTrigger>
                 <div>
                   <h1 className="text-xl font-semibold text-primary">Dashboard</h1>
-                  <p className="text-sm text-muted-foreground">Welcome back, {profile?.full_name || user.email}!</p>
+                  <p className="text-sm text-muted-foreground">Welcome back, {profile?.full_name || 'Guest'}!</p>
                 </div>
               </motion.div>
               <motion.div 
@@ -156,7 +156,7 @@ const Dashboard = () => {
               variants={contentVariants}
             >
               <h1 className="text-3xl font-bold text-primary mb-2">
-                Welcome back, {profile?.full_name || user.email}!
+                Welcome back, {profile?.full_name || 'Guest'}!
               </h1>
               <p className="text-muted-foreground">
                 Manage your profile and account settings from your dashboard.

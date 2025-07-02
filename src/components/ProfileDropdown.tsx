@@ -46,8 +46,15 @@ export function ProfileDropdown() {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
+    try {
+      const { error } = await signOut();
+      if (error) throw error;
+      
+      // Force navigation to auth page
+      navigate('/auth', { replace: true });
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const getInitials = (name: string) => {

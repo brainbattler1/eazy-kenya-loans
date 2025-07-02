@@ -23,6 +23,8 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const MaintenanceMode = () => {
+  const { maintenanceMessage } = useAuth();
+
   return (
     <PageTransition>
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -34,8 +36,7 @@ const MaintenanceMode = () => {
             </div>
             <CardTitle className="text-2xl">System Under Maintenance</CardTitle>
             <CardDescription>
-              We're currently performing scheduled maintenance to improve our services.
-              Please check back later.
+              {maintenanceMessage || "We're currently performing scheduled maintenance to improve our services. Please check back later."}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -51,7 +52,7 @@ const MaintenanceMode = () => {
 };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, maintenanceMode, isAdmin } = useAuth();
+  const { user, loading, systemAccess, isAdmin } = useAuth();
 
   if (loading) {
     return (
@@ -67,7 +68,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  if (maintenanceMode && !isAdmin) {
+  if (systemAccess === 'maintenance' && !isAdmin) {
     return <MaintenanceMode />;
   }
 
