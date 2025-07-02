@@ -68,7 +68,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Check both systemAccess and maintenanceMode for maintenance status
+  // Strict maintenance mode check - block ALL non-admin users
   if ((systemAccess === 'maintenance' || maintenanceMode) && !isAdmin) {
     return <MaintenanceMode />;
   }

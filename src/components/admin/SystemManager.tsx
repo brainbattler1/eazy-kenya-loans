@@ -186,11 +186,9 @@ export function SystemManager({ currentUserId }: SystemManagerProps) {
               <Switch
                 checked={maintenance?.is_enabled || false}
                 onCheckedChange={(checked) => {
-                  if (checked || !maintenance?.is_enabled) {
-                    // Show confirmation dialog for both enabling and disabling
-                    const dialog = document.querySelector('[data-maintenance-dialog]') as HTMLButtonElement;
-                    if (dialog) dialog.click();
-                  }
+                  // Show confirmation dialog for both enabling and disabling
+                  const dialog = document.querySelector('[data-maintenance-dialog]') as HTMLButtonElement;
+                  if (dialog) dialog.click();
                 }}
                 disabled={actionLoading}
               />
