@@ -8,67 +8,67 @@ All colors MUST be HSL for professional consistency
 
 @layer base {
   :root {
-    /* Enhanced base colors - Premium professional palette */
+    /* Vibrant modern palette - Creative & professional */
     --background: 0 0% 100%;
-    --foreground: 210 15% 15%;
+    --foreground: 240 15% 12%;
 
-    /* Card system - Premium elevated surfaces */
+    /* Card system - Elevated modern surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 15%;
+    --card-foreground: 240 15% 12%;
 
     /* Popover components */
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 15%;
+    --popover-foreground: 240 15% 12%;
 
-    /* Primary brand - Enhanced teal for trust and innovation */
-    --primary: 185 84% 39%;
+    /* Primary brand - Vibrant purple for innovation & creativity */
+    --primary: 262 83% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 185 84% 49%;
-    --primary-dark: 185 84% 29%;
+    --primary-glow: 262 83% 68%;
+    --primary-dark: 262 83% 48%;
 
-    /* Secondary - Premium gold accent */
-    --secondary: 45 100% 51%;
+    /* Secondary - Vibrant coral accent */
+    --secondary: 14 100% 62%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 45 100% 61%;
+    --secondary-glow: 14 100% 72%;
 
-    /* Success - Enhanced emerald for positive actions */
-    --success: 145 85% 35%;
+    /* Success - Fresh modern green */
+    --success: 142 76% 45%;
     --success-foreground: 0 0% 100%;
-    --success-glow: 145 85% 45%;
+    --success-glow: 142 76% 55%;
 
-    /* Warning - Amber for caution */
-    --warning: 38 92% 50%;
+    /* Warning - Vibrant amber */
+    --warning: 25 95% 53%;
     --warning-foreground: 0 0% 100%;
 
-    /* Muted elements - Enhanced contrast */
-    --muted: 210 20% 96%;
-    --muted-foreground: 210 10% 55%;
+    /* Muted elements - Softer modern contrast */
+    --muted: 240 10% 96%;
+    --muted-foreground: 240 8% 50%;
 
-    /* Accent - Enhanced light backgrounds */
-    --accent: 185 30% 95%;
-    --accent-foreground: 210 15% 20%;
+    /* Accent - Modern purple-tinted backgrounds */
+    --accent: 262 30% 96%;
+    --accent-foreground: 240 15% 20%;
 
     /* Destructive - Enhanced error states */
     --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders and inputs - Enhanced */
-    --border: 210 15% 88%;
-    --input: 210 15% 88%;
-    --ring: 185 84% 39%;
+    /* Borders and inputs - Modern purple-tinted */
+    --border: 240 15% 90%;
+    --input: 240 12% 92%;
+    --ring: 262 83% 58%;
 
     /* Design system extensions */
     --radius: 0.75rem;
     --radius-lg: 1rem;
     --radius-xl: 1.25rem;
     
-    /* Enhanced gradients for premium fintech feel */
+    /* Stunning gradients for creative modern feel */
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)), hsl(var(--secondary)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--accent)));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--accent) / 0.5));
     --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(var(--success-glow)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
     --gradient-premium: linear-gradient(135deg, hsl(var(--primary-dark)), hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--accent) / 0.3));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--accent) / 0.2));
     
     /* Enhanced shadows for premium depth */
     --shadow-soft: 0 4px 20px -2px hsl(var(--primary) / 0.1);
