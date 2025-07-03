@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -100,7 +100,6 @@ const forgotPasswordSchema = z.object({
 
 const Auth = () => {
   const { user, signUp, signIn, verifyOtp, resendOtp, resetPassword } = useAuth();
-  const { toast } = useToast();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -135,9 +134,7 @@ const Auth = () => {
           
           if (data) {
             setReferrerName(data.full_name);
-            toast({
-              title: `You were invited by ${data.full_name}`,
-              description: 'Sign up now to get started!',
+            toast.success(`You were invited by ${data.full_name}! Sign up now to get started!`, {
               duration: 5000
             });
           }
@@ -148,7 +145,7 @@ const Auth = () => {
     };
 
     fetchReferrerInfo();
-  }, [searchParams, toast]);
+  }, [searchParams]);
 
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -200,11 +197,7 @@ const Auth = () => {
           fullError: error
         });
         
-        toast({
-          title: 'Error',
-          description: `Signup failed: ${error.message || 'Unknown error'}`,
-          variant: 'destructive'
-        });
+        toast.error(`Signup failed: ${error.message || 'Unknown error'}`);
       } else {
         // Store referral info for later tracking in profile creation
         const refCode = searchParams.get('ref');
@@ -214,18 +207,11 @@ const Auth = () => {
 
         setPendingEmail(values.email);
         setOtpStep(true);
-        toast({
-          title: 'Check your email',
-          description: 'We sent you a 6-digit verification code.'
-        });
+        toast.success('Check your email! We sent you a 6-digit verification code.');
       }
     } catch (unexpectedError) {
       console.error('🚨 Unexpected error in handleSignUp:', unexpectedError);
-      toast({
-        title: 'Error',
-        description: 'An unexpected error occurred during signup.',
-        variant: 'destructive'
-      });
+      toast.error('An unexpected error occurred during signup.');
     }
     
     setLoading(false);
@@ -239,16 +225,9 @@ const Auth = () => {
       if (error.message.includes('Email not confirmed') || error.name === 'EmailNotConfirmed') {
         setPendingEmail(values.email);
         setOtpStep(true);
-        toast({
-          title: 'Email verification required',
-          description: 'Please verify your email with the code we sent you, or click the confirmation link in your email.'
-        });
+        toast.info('Email verification required. Please verify your email with the code we sent you.');
       } else {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive'
-        });
+        toast.error(error.message);
       }
     }
     setLoading(false);
@@ -256,11 +235,7 @@ const Auth = () => {
 
   const handleVerifyOtp = async () => {
     if (otpValue.length !== 6) {
-      toast({
-        title: 'Invalid code',
-        description: 'Please enter a 6-digit verification code.',
-        variant: 'destructive'
-      });
+      toast.error('Please enter a 6-digit verification code.');
       return;
     }
 
@@ -268,16 +243,9 @@ const Auth = () => {
     const { error } = await verifyOtp(pendingEmail, otpValue);
     
     if (error) {
-      toast({
-        title: 'Verification failed',
-        description: error.message,
-        variant: 'destructive'
-      });
+      toast.error(`Verification failed: ${error.message}`);
     } else {
-      toast({
-        title: 'Success',
-        description: 'Email verified successfully!'
-      });
+      toast.success('Email verified successfully!');
       setOtpStep(false);
     }
     setLoading(false);
@@ -288,16 +256,9 @@ const Auth = () => {
     const { error } = await resendOtp(pendingEmail);
     
     if (error) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive'
-      });
+      toast.error(error.message);
     } else {
-      toast({
-        title: 'Code sent',
-        description: 'A new verification code has been sent to your email.'
-      });
+      toast.success('A new verification code has been sent to your email.');
     }
     setLoading(false);
   };
@@ -307,16 +268,9 @@ const Auth = () => {
     const { error } = await resetPassword(values.email);
     
     if (error) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive'
-      });
+      toast.error(error.message);
     } else {
-      toast({
-        title: 'Reset Email Sent',
-        description: 'Please check your email for password reset instructions.'
-      });
+      toast.success('Reset Email Sent. Please check your email for password reset instructions.');
       setForgotPasswordStep(false);
     }
     setLoading(false);

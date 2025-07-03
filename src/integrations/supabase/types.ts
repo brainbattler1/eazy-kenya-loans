@@ -251,6 +251,7 @@ export type Database = {
           email_verified: boolean | null
           full_name: string
           id: string
+          referral_code: string | null
           updated_at: string
           user_id: string
         }
@@ -261,6 +262,7 @@ export type Database = {
           email_verified?: boolean | null
           full_name: string
           id?: string
+          referral_code?: string | null
           updated_at?: string
           user_id: string
         }
@@ -271,6 +273,7 @@ export type Database = {
           email_verified?: boolean | null
           full_name?: string
           id?: string
+          referral_code?: string | null
           updated_at?: string
           user_id?: string
         }
