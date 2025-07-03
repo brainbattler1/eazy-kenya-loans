@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import eazyLoanLogo from '@/assets/eazy-loan-logo.jpg';
+import { supabase } from '@/integrations/supabase/client';
 
 // Animation variants
 const containerVariants = {
@@ -109,6 +110,8 @@ const Auth = () => {
   const [otpValue, setOtpValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('signin');
+  const [searchParams] = useSearchParams();
+  const [referrerName, setReferrerName] = useState<string | null>(null);
 
   // Check for navigation state to auto-switch to signup tab
   useEffect(() => {
@@ -116,6 +119,36 @@ const Auth = () => {
       setActiveTab('signup');
     }
   }, [location.state]);
+
+  // Check for referral code in URL
+  useEffect(() => {
+    const fetchReferrerInfo = async () => {
+      const refCode = searchParams.get('ref');
+      if (refCode) {
+        setActiveTab('signup');
+        try {
+          const { data } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('referral_code', refCode)
+            .single();
+          
+          if (data) {
+            setReferrerName(data.full_name);
+            toast({
+              title: `You were invited by ${data.full_name}`,
+              description: 'Sign up now to get started!',
+              duration: 5000
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching referrer info:', error);
+        }
+      }
+    };
+
+    fetchReferrerInfo();
+  }, [searchParams, toast]);
 
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -173,6 +206,12 @@ const Auth = () => {
           variant: 'destructive'
         });
       } else {
+        // Store referral info for later tracking in profile creation
+        const refCode = searchParams.get('ref');
+        if (refCode) {
+          localStorage.setItem('pendingReferralCode', refCode);
+        }
+
         setPendingEmail(values.email);
         setOtpStep(true);
         toast({
