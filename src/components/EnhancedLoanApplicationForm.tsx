@@ -244,27 +244,31 @@ export function EnhancedLoanApplicationForm() {
       </CardHeader>
       <CardContent>
         <Tabs value={currentStep} onValueChange={setCurrentStep} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="personal" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              Personal
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
+            <TabsTrigger value="personal" className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3">
+              <User className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Personal</span>
+              <span className="sm:hidden">1</span>
             </TabsTrigger>
-            <TabsTrigger value="employment" className="flex items-center gap-2">
-              <Building className="h-4 w-4" />
-              Employment
+            <TabsTrigger value="employment" className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3">
+              <Building className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Employment</span>
+              <span className="sm:hidden">2</span>
             </TabsTrigger>
-            <TabsTrigger value="loan" className="flex items-center gap-2">
-              <CreditCard className="h-4 w-4" />
-              Loan Details
+            <TabsTrigger value="loan" className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3">
+              <CreditCard className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Loan Details</span>
+              <span className="sm:hidden">3</span>
             </TabsTrigger>
-            <TabsTrigger value="documents" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Documents
+            <TabsTrigger value="documents" className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3">
+              <FileText className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Documents</span>
+              <span className="sm:hidden">4</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="personal" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="personal" className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="first_name">First Name *</Label>
                 <Input
@@ -287,7 +291,7 @@ export function EnhancedLoanApplicationForm() {
                 />
               </div>
 
-              <div className="space-y-2 md:col-span-2">
+              <div className="space-y-2 lg:col-span-2">
                 <Label htmlFor="address">Address *</Label>
                 <Textarea
                   id="address"
@@ -295,6 +299,7 @@ export function EnhancedLoanApplicationForm() {
                   value={formData.applicant_address}
                   onChange={(e) => setFormData({ ...formData, applicant_address: e.target.value })}
                   required
+                  className="min-h-[80px]"
                 />
               </div>
               
@@ -371,7 +376,7 @@ export function EnhancedLoanApplicationForm() {
                 <Phone className="h-4 w-4" />
                 Emergency Contact
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="emergency_name">Contact Name</Label>
                   <Input
@@ -402,8 +407,8 @@ export function EnhancedLoanApplicationForm() {
             </div>
           </TabsContent>
 
-          <TabsContent value="employment" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="employment" className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="employment_status">Employment Status *</Label>
                 <Select 
@@ -485,18 +490,18 @@ export function EnhancedLoanApplicationForm() {
               </div>
             </div>
 
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={() => setCurrentStep('personal')}>
+            <div className="flex flex-col sm:flex-row justify-between gap-2">
+              <Button variant="outline" onClick={() => setCurrentStep('personal')} className="w-full sm:w-auto">
                 Previous
               </Button>
-              <Button onClick={() => setCurrentStep('loan')}>
+              <Button onClick={() => setCurrentStep('loan')} className="w-full sm:w-auto">
                 Next: Loan Details
               </Button>
             </div>
           </TabsContent>
 
-          <TabsContent value="loan" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TabsContent value="loan" className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="amount">Loan Amount ($) *</Label>
                 <Input
@@ -533,7 +538,7 @@ export function EnhancedLoanApplicationForm() {
                 </Select>
               </div>
 
-              <div className="space-y-2 md:col-span-2">
+              <div className="space-y-2 lg:col-span-2">
                 <Label htmlFor="purpose">Loan Purpose *</Label>
                 <Select 
                   value={formData.purpose} 
@@ -561,7 +566,7 @@ export function EnhancedLoanApplicationForm() {
                   <CardTitle className="text-lg">Loan Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">Daily Payment</p>
                       <p className="text-lg font-semibold">${formData.monthly_payment.toFixed(2)}</p>
@@ -583,18 +588,18 @@ export function EnhancedLoanApplicationForm() {
               </Card>
             )}
 
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={() => setCurrentStep('employment')}>
+            <div className="flex flex-col sm:flex-row justify-between gap-2">
+              <Button variant="outline" onClick={() => setCurrentStep('employment')} className="w-full sm:w-auto">
                 Previous
               </Button>
-              <Button onClick={() => setCurrentStep('documents')}>
+              <Button onClick={() => setCurrentStep('documents')} className="w-full sm:w-auto">
                 Next: Upload Documents
               </Button>
             </div>
           </TabsContent>
 
-          <TabsContent value="documents" className="space-y-6">
-            <div className="space-y-6">
+          <TabsContent value="documents" className="space-y-4 md:space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <div className="space-y-4">
                 <h4 className="font-medium text-primary">Required Documents</h4>
                 <p className="text-sm text-muted-foreground">
@@ -602,7 +607,7 @@ export function EnhancedLoanApplicationForm() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="id_front">ID Document (Front) *</Label>
                   <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
@@ -680,8 +685,8 @@ export function EnhancedLoanApplicationForm() {
                 </div>
               </div>
 
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={() => setCurrentStep('loan')}>
+              <div className="flex flex-col sm:flex-row justify-between gap-2">
+                <Button variant="outline" onClick={() => setCurrentStep('loan')} className="w-full sm:w-auto">
                   Previous
                 </Button>
                 <Button 
@@ -698,7 +703,7 @@ export function EnhancedLoanApplicationForm() {
                     !documents.id_document_front ||
                     !documents.id_document_back
                   }
-                  className="bg-gradient-hero hover:shadow-glow transition-all duration-300"
+                  className="bg-gradient-hero hover:shadow-glow transition-all duration-300 w-full sm:w-auto"
                 >
                   {uploading ? 'Uploading Documents...' : submitting ? 'Submitting...' : 'Submit Application'}
                 </Button>

@@ -97,7 +97,7 @@ const Referrals = () => {
   };
 
   const copyReferralLink = () => {
-    const referralLink = `${window.location.origin}/auth?ref=${myReferralCode}`;
+    const referralLink = `https://eazy-loan.com/auth?ref=${myReferralCode}`;
     navigator.clipboard.writeText(referralLink);
     toast.success('Referral link copied to clipboard!');
   };
@@ -229,7 +229,7 @@ const Referrals = () => {
                 <CardContent className="space-y-4">
                   <div className="flex gap-2">
                     <Input
-                      value={`${window.location.origin}/auth?ref=${myReferralCode}`}
+                      value={`https://eazy-loan.com/auth?ref=${myReferralCode}`}
                       readOnly
                       className="font-mono text-sm"
                     />
