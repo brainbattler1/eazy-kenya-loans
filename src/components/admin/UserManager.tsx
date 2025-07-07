@@ -77,10 +77,10 @@ export function UserManager({ users, onRefresh }: UserManagerProps) {
   const handleBanUser = async (userId: string, ban: boolean) => {
     setActionLoading(userId);
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ banned: ban })
-        .eq('user_id', userId);
+      const { error } = await supabase.rpc('toggle_user_ban', {
+        target_user_id: userId,
+        ban_status: ban
+      });
       
       if (error) throw error;
 
