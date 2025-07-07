@@ -105,10 +105,15 @@ export function LoanManager({ currentUserId }: LoanManagerProps) {
         updateData.rejection_reason = reason;
       }
 
+      console.log('Updating loan with data:', updateData);
+      console.log('Current user ID:', currentUserId);
+
       const { error } = await supabase
         .from('loan_applications')
         .update(updateData)
         .eq('id', loanId);
+
+      console.log('Update error:', error);
 
       if (error) throw error;
 
