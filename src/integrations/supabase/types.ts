@@ -566,36 +566,14 @@ export type Database = {
         Returns: undefined
       }
       send_notification_to_user: {
-        Args:
-          | {
-              _user_id: string
-              _title: string
-              _message: string
-              _type?: Database["public"]["Enums"]["notification_type"]
-              _action_url?: string
-              _metadata?: Json
-            }
-          | {
-              user_id: string
-              notification_type: Database["public"]["Enums"]["notification_type"]
-              title: string
-              message: string
-              metadata?: string
-            }
-          | {
-              user_id: string
-              notification_type: string
-              title: string
-              message: string
-              metadata?: Json
-            }
-          | {
-              user_id: string
-              notification_type: string
-              title: string
-              message: string
-              metadata?: string
-            }
+        Args: {
+          _user_id: string
+          _title: string
+          _message: string
+          _type?: Database["public"]["Enums"]["notification_type"]
+          _action_url?: string
+          _metadata?: Json
+        }
         Returns: string
       }
       toggle_maintenance_mode: {
