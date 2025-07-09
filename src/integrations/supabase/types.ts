@@ -55,6 +55,8 @@ export type Database = {
           amount: number
           applicant_address: string | null
           applicant_phone: string | null
+          approved_at: string | null
+          approved_by: string | null
           bank_statement_url: string | null
           created_at: string
           credit_score: number | null
@@ -80,6 +82,8 @@ export type Database = {
           processing_fee: number
           proof_of_income_url: string | null
           purpose: string
+          rejected_at: string | null
+          rejected_by: string | null
           rejection_reason: string | null
           reviewed_at: string | null
           reviewed_by: string | null
@@ -93,6 +97,8 @@ export type Database = {
           amount: number
           applicant_address?: string | null
           applicant_phone?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           bank_statement_url?: string | null
           created_at?: string
           credit_score?: number | null
@@ -118,6 +124,8 @@ export type Database = {
           processing_fee?: number
           proof_of_income_url?: string | null
           purpose: string
+          rejected_at?: string | null
+          rejected_by?: string | null
           rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -131,6 +139,8 @@ export type Database = {
           amount?: number
           applicant_address?: string | null
           applicant_phone?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           bank_statement_url?: string | null
           created_at?: string
           credit_score?: number | null
@@ -156,6 +166,8 @@ export type Database = {
           processing_fee?: number
           proof_of_income_url?: string | null
           purpose?: string
+          rejected_at?: string | null
+          rejected_by?: string | null
           rejection_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
