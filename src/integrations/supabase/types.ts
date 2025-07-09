@@ -577,6 +577,13 @@ export type Database = {
             }
           | {
               user_id: string
+              notification_type: Database["public"]["Enums"]["notification_type"]
+              title: string
+              message: string
+              metadata?: string
+            }
+          | {
+              user_id: string
               notification_type: string
               title: string
               message: string
