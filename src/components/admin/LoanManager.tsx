@@ -56,28 +56,29 @@ export function LoanManager({ currentUserId }: LoanManagerProps) {
 
       if (loansError) throw loansError;
 
-      // Get user details for each loan
-      const loansWithUserInfo = await Promise.all(
-        (loansData || []).map(async (loan) => {
-          try {
-            const { data: authUser } = await supabase.auth.admin.getUserById(loan.user_id);
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('full_name')
-              .eq('user_id', loan.user_id)
-              .single();
+      // Get all users data using the admin function
+      const { data: allUsers, error: usersError } = await supabase
+        .rpc('get_all_users_for_admin');
 
-            return {
-              ...loan,
-              user_email: authUser.user?.email,
-              user_name: profile?.full_name
-            };
-          } catch (error) {
-            console.error('Error fetching user info for loan:', loan.id, error);
-            return loan;
-          }
-        })
-      );
+      if (usersError) {
+        console.error('Error fetching users:', usersError);
+      }
+
+      // Create a map for quick user lookup
+      const userMap = (allUsers || []).reduce((acc: any, user: any) => {
+        acc[user.id] = user;
+        return acc;
+      }, {});
+
+      // Map loans with user data
+      const loansWithUserInfo = (loansData || []).map(loan => {
+        const user = userMap[loan.user_id];
+        return {
+          ...loan,
+          user_email: user?.email || 'Unknown',
+          user_name: user?.full_name || 'No name'
+        };
+      });
 
       setLoans(loansWithUserInfo);
     } catch (error) {
