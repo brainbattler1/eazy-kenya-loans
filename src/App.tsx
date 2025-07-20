@@ -91,6 +91,7 @@ const AnimatedRoutes = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/apply" element={<Navigate to="/loan-application" replace />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/login" element={<Auth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/dashboard"
