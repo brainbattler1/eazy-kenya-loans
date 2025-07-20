@@ -480,6 +480,19 @@ export type Database = {
       }
     }
     Views: {
+      loan_analytics: {
+        Row: {
+          avg_amount: number | null
+          avg_interest_rate: number | null
+          avg_tenure_days: number | null
+          count: number | null
+          last_30_days: number | null
+          last_7_days: number | null
+          status: Database["public"]["Enums"]["loan_status"] | null
+          total_amount: number | null
+        }
+        Relationships: []
+      }
       system_access: {
         Row: {
           access_status: string | null
@@ -493,6 +506,14 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      bulk_update_loan_status: {
+        Args: {
+          _loan_ids: string[]
+          _status: Database["public"]["Enums"]["loan_status"]
+          _rejection_reason?: string
+        }
+        Returns: number
+      }
       can_user_access_system: {
         Args: { _user_id?: string }
         Returns: boolean
@@ -504,6 +525,55 @@ export type Database = {
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_admin_loan_applications: {
+        Args: { _status?: string; _limit?: number; _offset?: number }
+        Returns: {
+          id: string
+          user_id: string
+          amount: number
+          interest_rate: number
+          tenure_days: number
+          monthly_payment: number
+          total_payment: number
+          processing_fee: number
+          purpose: string
+          employment_status: string
+          monthly_income: number
+          status: Database["public"]["Enums"]["loan_status"]
+          created_at: string
+          updated_at: string
+          reviewed_at: string
+          reviewed_by: string
+          approved_at: string
+          approved_by: string
+          rejected_at: string
+          rejected_by: string
+          rejection_reason: string
+          first_name: string
+          last_name: string
+          applicant_phone: string
+          applicant_address: string
+          date_of_birth: string
+          gender: string
+          marital_status: string
+          dependents: number
+          employer_name: string
+          employment_duration: string
+          emergency_contact_name: string
+          emergency_contact_phone: string
+          existing_loans_amount: number
+          credit_score: number
+          documents_uploaded: boolean
+          id_document_front_url: string
+          id_document_back_url: string
+          proof_of_income_url: string
+          bank_statement_url: string
+          user_email: string
+          user_full_name: string
+          user_created_at: string
+          risk_score: number
+        }[]
       }
       get_all_users_for_admin: {
         Args: Record<PropertyKey, never>
@@ -519,6 +589,21 @@ export type Database = {
           avatar_url: string
           role: Database["public"]["Enums"]["app_role"]
           email_verified: boolean
+        }[]
+      }
+      get_loan_statistics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_applications: number
+          pending_applications: number
+          approved_applications: number
+          rejected_applications: number
+          disbursed_applications: number
+          total_amount_requested: number
+          total_amount_approved: number
+          total_amount_disbursed: number
+          avg_approval_time: unknown
+          approval_rate: number
         }[]
       }
       has_role: {

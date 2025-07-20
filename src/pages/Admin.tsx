@@ -9,7 +9,7 @@ import { ProfileDropdown } from '@/components/ProfileDropdown';
 import NotificationCenter from '@/components/NotificationCenter';
 import { NotificationManager } from '@/components/admin/NotificationManager';
 import { UserManager } from '@/components/admin/UserManager';
-import { LoanManager } from '@/components/admin/LoanManager';
+import { EnhancedLoanManager } from '@/components/admin/EnhancedLoanManager';
 import { TicketManager } from '@/components/admin/TicketManager';
 import { SystemManager } from '@/components/admin/SystemManager';
 import { useAdminCheck } from '@/hooks/useAdminCheck';
@@ -194,7 +194,7 @@ const Admin = () => {
                 </TabsContent>
 
                 <TabsContent value="loans">
-                  <LoanManager currentUserId={user.id} />
+                  <EnhancedLoanManager currentUserId={user.id} />
                 </TabsContent>
 
                 <TabsContent value="tickets">
