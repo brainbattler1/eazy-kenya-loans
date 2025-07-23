@@ -176,16 +176,31 @@ export function EnhancedLoanManager({ currentUserId }: EnhancedLoanManagerProps)
         reviewed_by: currentUserId
       };
 
-      if (action === 'rejected' && reason) {
-        updateData.rejection_reason = reason;
+      if (action === 'approved') {
+        updateData.approved_at = new Date().toISOString();
+        updateData.approved_by = currentUserId;
+      } else if (action === 'rejected') {
+        updateData.rejected_at = new Date().toISOString();
+        updateData.rejected_by = currentUserId;
+        if (reason) {
+          updateData.rejection_reason = reason;
+        }
       }
 
-      const { error } = await supabase
+      console.log('Updating loan with data:', updateData);
+
+      const { data, error } = await supabase
         .from('loan_applications')
         .update(updateData)
-        .eq('id', loanId);
+        .eq('id', loanId)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+
+      console.log('Update successful:', data);
 
       toast({
         title: 'Success',
@@ -199,7 +214,7 @@ export function EnhancedLoanManager({ currentUserId }: EnhancedLoanManagerProps)
       console.error('Error updating loan:', error);
       toast({
         title: 'Error',
-        description: 'Failed to update loan status',
+        description: `Failed to update loan status: ${error instanceof Error ? error.message : 'Unknown error'}`,
         variant: 'destructive'
       });
     } finally {
