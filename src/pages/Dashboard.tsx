@@ -175,96 +175,100 @@ const Dashboard = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <AnimatePresence mode="wait">
-                <TabsContent value="overview" className="space-y-6">
-                  <motion.div 
-                    className="grid gap-6 md:grid-cols-2"
-                    variants={contentVariants}
-                  >
-                    <motion.div variants={cardVariants}>
-                      <Card className="shadow-card bg-gradient-card border-0">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Email Status</CardTitle>
-                          <User className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                          <div className="text-2xl font-bold text-primary">
-                            {profile?.email_verified ? 'Verified' : 'Pending'}
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {user.email}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-
-                    <motion.div variants={cardVariants}>
-                      <Card className="shadow-card bg-gradient-card border-0">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-                          <CreditCard className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <Button 
-                              className="w-full bg-gradient-hero hover:shadow-glow transition-all duration-300"
-                              onClick={() => window.location.href = '/profile'}
-                            >
-                              Edit Profile
-                            </Button>
-                          </motion.div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </motion.div>
-                </TabsContent>
-
-                <TabsContent value="account" className="space-y-6">
+              <TabsContent value="overview" className="space-y-6">
+                <motion.div 
+                  className="grid gap-6 md:grid-cols-2"
+                  variants={contentVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
                   <motion.div variants={cardVariants}>
                     <Card className="shadow-card bg-gradient-card border-0">
-                      <CardHeader>
-                        <CardTitle>Account Information</CardTitle>
-                        <CardDescription>Your current account details</CardDescription>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Email Status</CardTitle>
+                        <User className="h-4 w-4 text-muted-foreground" />
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <motion.div 
-                          className="grid gap-4"
-                          variants={contentVariants}
-                        >
-                          <div>
-                            <label className="text-sm font-medium">Full Name</label>
-                            <p className="text-muted-foreground">{profile?.full_name || 'Not set'}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Email</label>
-                            <p className="text-muted-foreground">{user.email}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Email Verified</label>
-                            <p className="text-muted-foreground">
-                              {profile?.email_verified ? 'Yes' : 'No'}
-                            </p>
-                          </div>
-                        </motion.div>
+                      <CardContent>
+                        <div className="text-2xl font-bold text-primary">
+                          {profile?.email_verified ? 'Verified' : 'Pending'}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+
+                  <motion.div variants={cardVariants}>
+                    <Card className="shadow-card bg-gradient-card border-0">
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
+                        <CreditCard className="h-4 w-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent className="space-y-2">
                         <motion.div
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
                           <Button 
-                            className="bg-gradient-hero hover:shadow-glow transition-all duration-300"
+                            className="w-full bg-gradient-hero hover:shadow-glow transition-all duration-300"
                             onClick={() => window.location.href = '/profile'}
                           >
-                            Update Profile
+                            Edit Profile
                           </Button>
                         </motion.div>
                       </CardContent>
                     </Card>
                   </motion.div>
-                </TabsContent>
-              </AnimatePresence>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="account" className="space-y-6">
+                <motion.div 
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <Card className="shadow-card bg-gradient-card border-0">
+                    <CardHeader>
+                      <CardTitle>Account Information</CardTitle>
+                      <CardDescription>Your current account details</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <motion.div 
+                        className="grid gap-4"
+                        variants={contentVariants}
+                      >
+                        <div>
+                          <label className="text-sm font-medium">Full Name</label>
+                          <p className="text-muted-foreground">{profile?.full_name || 'Not set'}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Email</label>
+                          <p className="text-muted-foreground">{user.email}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Email Verified</label>
+                          <p className="text-muted-foreground">
+                            {profile?.email_verified ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </motion.div>
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button 
+                          className="bg-gradient-hero hover:shadow-glow transition-all duration-300"
+                          onClick={() => window.location.href = '/profile'}
+                        >
+                          Update Profile
+                        </Button>
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
             </Tabs>
           </motion.main>
         </div>

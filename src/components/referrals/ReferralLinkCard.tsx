@@ -9,7 +9,7 @@ interface ReferralLinkCardProps {
 }
 
 export const ReferralLinkCard = ({ referralCode }: ReferralLinkCardProps) => {
-  const referralLink = `https://eazy-loans.com/auth?ref=${referralCode}`;
+  const referralLink = `${window.location.origin}/auth?ref=${referralCode}`;
 
   const copyReferralLink = () => {
     navigator.clipboard.writeText(referralLink);
@@ -21,7 +21,7 @@ export const ReferralLinkCard = ({ referralCode }: ReferralLinkCardProps) => {
       <CardHeader className="pb-3 sm:pb-6">
         <CardTitle className="text-primary text-lg sm:text-xl">Your Referral Link</CardTitle>
         <CardDescription className="text-sm">
-          Share this link with friends to earn $50 for each successful referral
+          Share this link with friends to earn KSh 5,000 for each successful referral
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -46,7 +46,7 @@ export const ReferralLinkCard = ({ referralCode }: ReferralLinkCardProps) => {
           <ul className="text-xs sm:text-sm text-muted-foreground space-y-1">
             <li>1. Share your referral link with friends</li>
             <li>2. They sign up and complete their first loan application</li>
-            <li>3. You both earn $50 when their loan is approved</li>
+            <li>3. You both earn KSh 5,000 when their loan is approved</li>
             <li>4. Rewards are paid out within 30 days</li>
           </ul>
         </div>

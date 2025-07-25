@@ -30,7 +30,7 @@ export const SendReferralForm = ({ myReferralCode, onReferralSent }: SendReferra
           referral_code: myReferralCode,
           email: email,
           status: 'pending',
-          reward_amount: 50
+          reward_amount: 5000
         });
 
       if (error) throw error;

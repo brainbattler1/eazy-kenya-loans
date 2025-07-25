@@ -77,7 +77,7 @@ export const ReferralsList = ({ referrals, loading }: ReferralsListProps) => {
                       </Badge>
                       {referral.reward_amount > 0 && (
                         <Badge variant="secondary" className="text-xs">
-                          ${referral.reward_amount}
+                          KSh {referral.reward_amount}
                         </Badge>
                       )}
                     </div>

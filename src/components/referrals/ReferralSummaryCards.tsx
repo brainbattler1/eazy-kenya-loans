@@ -29,13 +29,13 @@ export const ReferralSummaryCards = ({
     },
     {
       title: 'Total Earned',
-      value: `$${totalEarned}`,
+      value: `KSh ${totalEarned.toLocaleString()}`,
       icon: DollarSign,
       description: 'Total rewards'
     },
     {
       title: 'Pending',
-      value: `$${pendingEarnings}`,
+      value: `KSh ${pendingEarnings.toLocaleString()}`,
       icon: Gift,
       description: 'Awaiting payment'
     }
