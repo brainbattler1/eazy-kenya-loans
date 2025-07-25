@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -58,6 +58,8 @@ export function EnhancedLoanApplicationForm() {
   const [currentStep, setCurrentStep] = useState('personal');
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [hasPendingLoan, setHasPendingLoan] = useState(false);
+  const [loadingPendingCheck, setLoadingPendingCheck] = useState(true);
   
   const [formData, setFormData] = useState<FormData>({
     amount: '',
@@ -91,6 +93,31 @@ export function EnhancedLoanApplicationForm() {
     bank_statement: null,
     proof_of_income: null
   });
+
+  // Check for pending loans on component mount
+  useEffect(() => {
+    if (user) {
+      checkPendingLoans();
+    }
+  }, [user]);
+
+  const checkPendingLoans = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('loan_applications')
+        .select('id')
+        .eq('user_id', user?.id)
+        .eq('status', 'pending')
+        .limit(1);
+
+      if (error) throw error;
+      setHasPendingLoan(data && data.length > 0);
+    } catch (error) {
+      console.error('Error checking pending loans:', error);
+    } finally {
+      setLoadingPendingCheck(false);
+    }
+  };
 
   const calculateLoan = () => {
     const amount = parseFloat(formData.amount);
@@ -243,6 +270,26 @@ export function EnhancedLoanApplicationForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {loadingPendingCheck ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : hasPendingLoan ? (
+          <div className="text-center py-8">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-yellow-800 mb-2">Pending Application Found</h3>
+              <p className="text-yellow-700 mb-4">
+                You already have a pending loan application. Please wait for it to be processed before applying for a new loan.
+              </p>
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.href = '/loans'}
+              >
+                View My Applications
+              </Button>
+            </div>
+          </div>
+        ) : (
         <Tabs value={currentStep} onValueChange={setCurrentStep} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-1">
             <TabsTrigger value="personal" className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3">
@@ -456,7 +503,7 @@ export function EnhancedLoanApplicationForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="monthly_income">Monthly Income ($) *</Label>
+                <Label htmlFor="monthly_income">Monthly Income (KSh) *</Label>
                 <Input
                   id="monthly_income"
                   type="number"
@@ -468,7 +515,7 @@ export function EnhancedLoanApplicationForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="existing_loans">Existing Loans Amount ($)</Label>
+                <Label htmlFor="existing_loans">Existing Loans Amount (KSh)</Label>
                 <Input
                   id="existing_loans"
                   type="number"
@@ -503,7 +550,7 @@ export function EnhancedLoanApplicationForm() {
           <TabsContent value="loan" className="space-y-4 md:space-y-6">
             <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="amount">Loan Amount ($) *</Label>
+                <Label htmlFor="amount">Loan Amount (KSh) *</Label>
                 <Input
                   id="amount"
                   type="number"
@@ -569,11 +616,11 @@ export function EnhancedLoanApplicationForm() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">Daily Payment</p>
-                      <p className="text-lg font-semibold">${formData.monthly_payment.toFixed(2)}</p>
+                      <p className="text-lg font-semibold">KSh {formData.monthly_payment.toFixed(2)}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Total Amount</p>
-                      <p className="text-lg font-semibold">${formData.total_payment.toFixed(2)}</p>
+                      <p className="text-lg font-semibold">KSh {formData.total_payment.toFixed(2)}</p>
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Interest Rate</p>
@@ -581,7 +628,7 @@ export function EnhancedLoanApplicationForm() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Processing Fee</p>
-                      <p className="text-lg font-semibold">${formData.processing_fee.toFixed(2)}</p>
+                      <p className="text-lg font-semibold">KSh {formData.processing_fee.toFixed(2)}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -711,6 +758,7 @@ export function EnhancedLoanApplicationForm() {
             </div>
           </TabsContent>
         </Tabs>
+        )}
       </CardContent>
     </Card>
   );
