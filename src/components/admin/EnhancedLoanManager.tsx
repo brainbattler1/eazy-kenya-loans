@@ -277,9 +277,9 @@ export function EnhancedLoanManager({ currentUserId }: EnhancedLoanManagerProps)
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-KE', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'KES'
     }).format(amount);
   };
 
@@ -567,9 +567,16 @@ export function EnhancedLoanManager({ currentUserId }: EnhancedLoanManagerProps)
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(loan.status)}>
-                        {loan.status.replace('_', ' ').toUpperCase()}
-                      </Badge>
+                      <div>
+                        <Badge className={getStatusColor(loan.status)}>
+                          {loan.status.replace('_', ' ').toUpperCase()}
+                        </Badge>
+                        {loan.status === 'rejected' && loan.rejection_reason && (
+                          <p className="text-xs text-red-600 mt-1 max-w-xs truncate" title={loan.rejection_reason}>
+                            {loan.rejection_reason}
+                          </p>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>{formatDate(loan.created_at)}</TableCell>
                     <TableCell>
